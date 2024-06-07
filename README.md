@@ -21,7 +21,7 @@ let y = false;
 
 ## Operators
 
-Monkey includes a variety of operators for performing arithmetic and comparisons:
+Monkey includes a variety of operators for performing arithmetic and comparisons.
 
 ### Basic Arithemtic Operators
 
