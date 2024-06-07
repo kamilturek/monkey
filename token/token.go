@@ -4,11 +4,11 @@ const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 
-	// Identifiers and literals
+	// Identifiers and literals.
 	IDENT = "IDENT"
 	INT   = "INT"
 
-	// Operators
+	// Operators.
 	ASSIGN   = "="
 	PLUS     = "+"
 	MINUS    = "-"
@@ -21,7 +21,7 @@ const (
 	EQ     = "=="
 	NOT_EQ = "!="
 
-	// Delimiters
+	// Delimiters.
 	COMMA     = ","
 	SEMICOLON = ";"
 
@@ -30,7 +30,7 @@ const (
 	LBRACE = "{"
 	RBRACE = "}"
 
-	// Keywords
+	// Keywords.
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
 	TRUE     = "TRUE"

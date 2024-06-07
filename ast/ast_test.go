@@ -8,6 +8,8 @@ import (
 )
 
 func TestString(t *testing.T) {
+	t.Parallel()
+
 	program := &ast.Program{
 		Statements: []ast.Statement{
 			&ast.LetStatement{

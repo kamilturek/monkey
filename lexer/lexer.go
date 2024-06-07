@@ -10,8 +10,14 @@ type Lexer struct {
 }
 
 func NewLexer(input string) *Lexer {
-	l := &Lexer{input: input}
+	l := &Lexer{
+		input:        input,
+		position:     0,
+		readPosition: 0,
+		ch:           0,
+	}
 	l.readChar()
+
 	return l
 }
 

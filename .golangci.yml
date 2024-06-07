@@ -1,0 +1,15 @@
+linters:
+  enable-all: true
+  disable:
+    - cyclop
+    - depguard
+    - execinquery
+    - exhaustruct
+    - forbidigo
+    - funlen
+    - gochecknoglobals
+    - gomnd
+    - ireturn
+    - revive
+    - stylecheck
+    - varnamelen

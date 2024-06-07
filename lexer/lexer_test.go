@@ -8,6 +8,8 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
+	t.Parallel()
+
 	input := `
 	let five = 5;
 	let ten = 10;

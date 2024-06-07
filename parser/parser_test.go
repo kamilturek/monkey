@@ -1,7 +1,7 @@
 package parser_test
 
 import (
-	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/kamilturek/monkey/ast"
@@ -14,22 +14,26 @@ func testLetStatement(t *testing.T, stmt ast.Statement, name string) bool {
 
 	if stmt.TokenLiteral() != "let" {
 		t.Errorf("s.TokenLiteral not 'let'. got=%q", stmt.TokenLiteral())
+
 		return false
 	}
 
 	letStmt, ok := stmt.(*ast.LetStatement)
 	if !ok {
 		t.Errorf("s not *ast.LetStatement. got=%T", stmt)
+
 		return false
 	}
 
 	if letStmt.Name.Value != name {
 		t.Errorf("letStmt.Name.Value not '%s'. got=%s", name, letStmt.Name.Value)
+
 		return false
 	}
 
 	if letStmt.Name.TokenLiteral() != name {
 		t.Errorf("letStmt.Name.TokenLiteral() not '%s'. got=%s", name, letStmt.Name.TokenLiteral())
+
 		return false
 	}
 
@@ -42,15 +46,17 @@ func testIntegerLiteral(t *testing.T, exp ast.Expression, value int64) bool {
 	il, ok := exp.(*ast.IntegerLiteral)
 	if !ok {
 		t.Errorf("exp not *ast.IntegerLiteral. got=%T", exp)
+
 		return false
 	}
 
 	if il.Value != value {
 		t.Errorf("il.Value not %d. got=%d", value, il.Value)
+
 		return false
 	}
 
-	if il.TokenLiteral() != fmt.Sprintf("%d", value) {
+	if il.TokenLiteral() != strconv.FormatInt(value, 10) {
 		t.Errorf("il.TokenLiteral not %d. got=%s", value, il.TokenLiteral())
 	}
 
@@ -63,16 +69,19 @@ func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	ident, ok := exp.(*ast.Identifier)
 	if !ok {
 		t.Errorf("exp not *ast.Identifier. got=%T", exp)
+
 		return false
 	}
 
 	if ident.Value != value {
 		t.Errorf("ident.Value not %s. got=%s", value, ident.Value)
+
 		return false
 	}
 
 	if ident.TokenLiteral() != value {
 		t.Errorf("ident.TokenLiteral not %s. got=%s", value, ident.TokenLiteral())
+
 		return false
 	}
 
@@ -80,6 +89,8 @@ func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 }
 
 func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{}) bool {
+	t.Helper()
+
 	switch v := expected.(type) {
 	case int:
 		return testIntegerLiteral(t, exp, int64(v))
@@ -100,6 +111,7 @@ func testInfixExpression(t *testing.T, exp ast.Expression, left interface{}, ope
 	ie, ok := exp.(*ast.InfixExpression)
 	if !ok {
 		t.Errorf("exp is not ast.InfixExpression. got=%T", exp)
+
 		return false
 	}
 
@@ -128,6 +140,7 @@ func checkParserErrors(t *testing.T, p *parser.Parser) {
 	}
 
 	t.Errorf("parser has %d errors", len(errors))
+
 	for _, msg := range errors {
 		t.Errorf("parser error: %q", msg)
 	}
@@ -136,6 +149,8 @@ func checkParserErrors(t *testing.T, p *parser.Parser) {
 }
 
 func TestLetStatements(t *testing.T) {
+	t.Parallel()
+
 	input := `
 	let x = 5;
 	let y = 10;
@@ -168,6 +183,8 @@ func TestLetStatements(t *testing.T) {
 }
 
 func TestReturnStatement(t *testing.T) {
+	t.Parallel()
+
 	input := `
 	return 5;
 	return 10;
@@ -187,6 +204,7 @@ func TestReturnStatement(t *testing.T) {
 		returnStmt, ok := stmt.(*ast.ReturnStatement)
 		if !ok {
 			t.Errorf("s not *ast.ReturnStatement. got=%T", stmt)
+
 			continue
 		}
 
@@ -197,6 +215,8 @@ func TestReturnStatement(t *testing.T) {
 }
 
 func TestIdentifierExpression(t *testing.T) {
+	t.Parallel()
+
 	input := "foobar;"
 
 	l := lexer.NewLexer(input)
@@ -217,6 +237,8 @@ func TestIdentifierExpression(t *testing.T) {
 }
 
 func TestIntegerLiteralExpression(t *testing.T) {
+	t.Parallel()
+
 	input := "5;"
 
 	l := lexer.NewLexer(input)
@@ -237,6 +259,8 @@ func TestIntegerLiteralExpression(t *testing.T) {
 }
 
 func TestParsingPrefixExpressions(t *testing.T) {
+	t.Parallel()
+
 	prefixTests := []struct {
 		input        string
 		operator     string
@@ -275,6 +299,8 @@ func TestParsingPrefixExpressions(t *testing.T) {
 }
 
 func TestParsingInfixExpressions(t *testing.T) {
+	t.Parallel()
+
 	infixTests := []struct {
 		input      string
 		leftValue  int64
@@ -311,6 +337,8 @@ func TestParsingInfixExpressions(t *testing.T) {
 }
 
 func TestOperatorPrecedenceParsing(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		input    string
 		expected string

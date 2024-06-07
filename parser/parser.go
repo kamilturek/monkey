@@ -95,9 +95,8 @@ func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 
 	for p.curToken.Type != token.EOF {
-		if stmt := p.parseStatement(); stmt != nil {
-			program.Statements = append(program.Statements, stmt)
-		}
+		stmt := p.parseStatement()
+		program.Statements = append(program.Statements, stmt)
 
 		p.nextToken()
 	}
@@ -116,10 +115,12 @@ func (p *Parser) peekTokenIs(t token.TokenType) bool {
 func (p *Parser) exceptPeek(t token.TokenType) bool {
 	if p.peekTokenIs(t) {
 		p.nextToken()
+
 		return true
 	}
 
 	p.peekError(t)
+
 	return false
 }
 
@@ -209,6 +210,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
 		p.noPrefixParseFnError(p.curToken.Type)
+
 		return nil
 	}
 
@@ -264,6 +266,7 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 	if err != nil {
 		msg := fmt.Sprintf("could not parse %q as integer", p.curToken.Literal)
 		p.errors = append(p.errors, msg)
+
 		return nil
 	}
 
