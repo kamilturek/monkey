@@ -17,22 +17,42 @@ func TestNextToken(t *testing.T) {
 	};
 
 	let result = add(five, ten);
+	!-/*5;
+	5 < 10 > 5;
+
+	if (5 < 10) {
+		return true;
+	} else {
+		return false;
+	}
+
+	10 == 10;
+	10 != 9;
 	`
 
-	tests := []struct {
+	type expectedToken struct {
 		expectedType    token.TokenType
 		expectedLiteral string
-	}{
-		{token.LET, "let"},
+	}
+
+	// Pre-defined expected tokens
+	LET := expectedToken{token.LET, "let"}
+	INT5 := expectedToken{token.INT, "5"}
+	INT9 := expectedToken{token.INT, "9"}
+	INT10 := expectedToken{token.INT, "10"}
+	SEMICOLON := expectedToken{token.SEMICOLON, ";"}
+
+	tests := []expectedToken{
+		LET,
 		{token.IDENT, "five"},
 		{token.ASSIGN, "="},
-		{token.INT, "5"},
-		{token.SEMICOLON, ";"},
+		INT5,
+		SEMICOLON,
 		{token.LET, "let"},
 		{token.IDENT, "ten"},
 		{token.ASSIGN, "="},
-		{token.INT, "10"},
-		{token.SEMICOLON, ";"},
+		INT10,
+		SEMICOLON,
 		{token.LET, "let"},
 		{token.IDENT, "add"},
 		{token.ASSIGN, "="},
@@ -46,9 +66,9 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "x"},
 		{token.PLUS, "+"},
 		{token.IDENT, "y"},
-		{token.SEMICOLON, ";"},
+		SEMICOLON,
 		{token.RBRACE, "}"},
-		{token.SEMICOLON, ";"},
+		SEMICOLON,
 		{token.LET, "let"},
 		{token.IDENT, "result"},
 		{token.ASSIGN, "="},
@@ -58,7 +78,44 @@ func TestNextToken(t *testing.T) {
 		{token.COMMA, ","},
 		{token.IDENT, "ten"},
 		{token.RPAREN, ")"},
-		{token.SEMICOLON, ";"},
+		SEMICOLON,
+		{token.BANG, "!"},
+		{token.MINUS, "-"},
+		{token.SLASH, "/"},
+		{token.ASTERISK, "*"},
+		INT5,
+		SEMICOLON,
+		INT5,
+		{token.LT, "<"},
+		INT10,
+		{token.GT, ">"},
+		INT5,
+		SEMICOLON,
+		{token.IF, "if"},
+		{token.LPAREN, "("},
+		INT5,
+		{token.LT, "<"},
+		INT10,
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
+		{token.RETURN, "return"},
+		{token.TRUE, "true"},
+		SEMICOLON,
+		{token.RBRACE, "}"},
+		{token.ELSE, "else"},
+		{token.LBRACE, "{"},
+		{token.RETURN, "return"},
+		{token.FALSE, "false"},
+		SEMICOLON,
+		{token.RBRACE, "}"},
+		INT10,
+		{token.EQ, "=="},
+		INT10,
+		SEMICOLON,
+		INT10,
+		{token.NOT_EQ, "!="},
+		INT9,
+		SEMICOLON,
 		{token.EOF, ""},
 	}
 
