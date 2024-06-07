@@ -4,7 +4,7 @@ A Monkey programming language interpreter from the book ["Writing An Interpreter
 
 ## Standard Types
 
-Monkey supports several basic data types:
+Monkey supports several basic data types.
 
 ### Integer
 
