@@ -501,7 +501,9 @@ func TestBoolean(t *testing.T) {
 }
 
 func TestIfExpression(t *testing.T) {
-	input := `if (x < y) { x }`
+	t.Parallel()
+
+	input := "if (x < y) { x }"
 
 	l := lexer.NewLexer(input)
 	p := parser.NewParser(l)
@@ -545,7 +547,9 @@ func TestIfExpression(t *testing.T) {
 }
 
 func TestIfElseExpression(t *testing.T) {
-	input := `if (x < y) { x } else { y }`
+	t.Parallel()
+
+	input := "if (x < y) { x } else { y }"
 
 	l := lexer.NewLexer(input)
 	p := parser.NewParser(l)
