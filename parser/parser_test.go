@@ -618,6 +618,8 @@ func TestIfElseExpression(t *testing.T) {
 }
 
 func TestFunctionLiteral(t *testing.T) {
+	t.Parallel()
+
 	input := "fn(x, y) { x + y; }"
 
 	l := lexer.NewLexer(input)
@@ -657,6 +659,8 @@ func TestFunctionLiteral(t *testing.T) {
 }
 
 func TestFunctionParameters(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		input          string
 		expectedParams []string
@@ -672,11 +676,22 @@ func TestFunctionParameters(t *testing.T) {
 		program := p.ParseProgram()
 		testParserErrors(t, p)
 
-		stmt := program.Statements[0].(*ast.ExpressionStatement)
-		function := stmt.Expression.(*ast.FunctionLiteral)
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Fatalf("program.Statements[0] not *ast.ExpressionStatement. got=%T", program.Statements[0])
+		}
+
+		function, ok := stmt.Expression.(*ast.FunctionLiteral)
+		if !ok {
+			t.Fatalf("stmt.Expression not *ast.FunctionLiteral. got=%T", stmt.Expression)
+		}
 
 		if len(function.Parameters) != len(tt.expectedParams) {
-			t.Fatalf("function.Parameters does not contain %d parameters. got=%d", len(tt.expectedParams), len(function.Parameters))
+			t.Fatalf(
+				"function.Parameters does not contain %d parameters. got=%d",
+				len(tt.expectedParams),
+				len(function.Parameters),
+			)
 		}
 
 		for i, ident := range tt.expectedParams {
@@ -686,6 +701,8 @@ func TestFunctionParameters(t *testing.T) {
 }
 
 func TestCallExpression(t *testing.T) {
+	t.Parallel()
+
 	input := "add(1, 2 * 3, 4 + 5);"
 
 	l := lexer.NewLexer(input)
@@ -719,6 +736,8 @@ func TestCallExpression(t *testing.T) {
 }
 
 func TestCallExpressionArguments(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		input             string
 		expectedArguments []string
@@ -734,11 +753,22 @@ func TestCallExpressionArguments(t *testing.T) {
 		program := p.ParseProgram()
 		testParserErrors(t, p)
 
-		stmt := program.Statements[0].(*ast.ExpressionStatement)
-		callExp := stmt.Expression.(*ast.CallExpression)
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Fatalf("program.Statements[0] not *ast.ExpressionStatement. got=%T", program.Statements[0])
+		}
+
+		callExp, ok := stmt.Expression.(*ast.CallExpression)
+		if !ok {
+			t.Fatalf("stmt.Expression not *ast.CallExpression. got=%T", stmt.Expression)
+		}
 
 		if len(callExp.Arguments) != len(tt.expectedArguments) {
-			t.Fatalf("callExp.Arguments does not contain %d arguments. got=%d", len(tt.expectedArguments), len(callExp.Arguments))
+			t.Fatalf(
+				"callExp.Arguments does not contain %d arguments. got=%d",
+				len(tt.expectedArguments),
+				len(callExp.Arguments),
+			)
 		}
 
 		for i, ident := range tt.expectedArguments {

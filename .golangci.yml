@@ -3,6 +3,7 @@ linters:
   disable:
     - cyclop
     - depguard
+    - dupl
     - execinquery
     - exhaustruct
     - forbidigo

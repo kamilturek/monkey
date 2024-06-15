@@ -368,6 +368,7 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 
 	if p.peekTokenIs(token.RPAREN) {
 		p.nextToken()
+
 		return identifiers
 	}
 
@@ -375,7 +376,11 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 		return nil
 	}
 
-	ident := p.parseIdentifier().(*ast.Identifier)
+	ident, ok := p.parseIdentifier().(*ast.Identifier)
+	if !ok {
+		return nil
+	}
+
 	identifiers = append(identifiers, ident)
 
 	for p.peekTokenIs(token.COMMA) {
@@ -385,7 +390,11 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 			return nil
 		}
 
-		ident := p.parseIdentifier().(*ast.Identifier)
+		ident, ok := p.parseIdentifier().(*ast.Identifier)
+		if !ok {
+			return nil
+		}
+
 		identifiers = append(identifiers, ident)
 	}
 
@@ -409,6 +418,7 @@ func (p *Parser) parseCallArguments() []ast.Expression {
 
 	if p.peekTokenIs(token.RPAREN) {
 		p.nextToken()
+
 		return args
 	}
 
