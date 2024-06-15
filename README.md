@@ -45,3 +45,24 @@ let y = 5 < 5;
 let z = 5 == 5;
 let v = 5 != 5;
 ```
+
+### Operator Precedence
+
+The following table shows the operator precedence in Monkey, from lowest to highest:
+
+| Precedence Level | Operators       | Description                |
+|------------------|-----------------|----------------------------|
+| 6 (Highest)      | Function calls  | Function calls             |
+| 5                | Prefix `-`, `!` | Unary operations           |
+| 4                | `*`, `/`        | Multiplication and Division|
+| 3                | `+`, `-`        | Addition and Subtraction   |
+| 2                | `<`, `>`        | Comparison                 |
+| 1 (Lowest)       | `==`, `!=`      | Equality                   |
+
+### Grouped Expressions
+
+You can use parentheses to influence the order of executing arithmetic operations.
+
+```
+let x = (2 / (5 + 5));
+```
