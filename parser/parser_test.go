@@ -463,6 +463,18 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 			"!(true == true)",
 			"(!(true == true))",
 		},
+		{
+			"a + add(b * c) + d",
+			"((a + add((b * c))) + d)",
+		},
+		{
+			"add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))",
+			"add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))",
+		},
+		{
+			"add(a + b + c * d / f + g)",
+			"add((((a + b) + ((c * d) / f)) + g))",
+		},
 	}
 
 	for _, tt := range tests {
@@ -606,7 +618,7 @@ func TestIfElseExpression(t *testing.T) {
 }
 
 func TestFunctionLiteral(t *testing.T) {
-	input := `fn(x, y) { x + y;}`
+	input := "fn(x, y) { x + y;}"
 
 	l := lexer.NewLexer(input)
 	p := parser.NewParser(l)
@@ -669,6 +681,68 @@ func TestFunctionParameters(t *testing.T) {
 
 		for i, ident := range tt.expectedParams {
 			testLiteralExpression(t, function.Parameters[i], ident)
+		}
+	}
+}
+
+func TestCallExpression(t *testing.T) {
+	input := "add(1, 2 * 3, 4 + 5);"
+
+	l := lexer.NewLexer(input)
+	p := parser.NewParser(l)
+	program := p.ParseProgram()
+	testParserErrors(t, p)
+
+	testProgramStatements(t, program, 1)
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] not *ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	callExp, ok := stmt.Expression.(*ast.CallExpression)
+	if !ok {
+		t.Fatalf("stmt.Expression not *ast.CallExpression. got=%T", stmt.Expression)
+	}
+
+	if !testIdentifier(t, callExp.Function, "add") {
+		return
+	}
+
+	if len(callExp.Arguments) != 3 {
+		t.Fatalf("callExp.Arguments does not contain 3 arguments. got=%d", len(callExp.Arguments))
+	}
+
+	testLiteralExpression(t, callExp.Arguments[0], 1)
+	testInfixExpression(t, callExp.Arguments[1], 2, "*", 3)
+	testInfixExpression(t, callExp.Arguments[2], 4, "+", 5)
+}
+
+func TestCallExpressionArguments(t *testing.T) {
+	tests := []struct {
+		input             string
+		expectedArguments []string
+	}{
+		{"add();", []string{}},
+		{"add(x);", []string{"x"}},
+		{"add(x, y);", []string{"x", "y"}},
+	}
+
+	for _, tt := range tests {
+		l := lexer.NewLexer(tt.input)
+		p := parser.NewParser(l)
+		program := p.ParseProgram()
+		testParserErrors(t, p)
+
+		stmt := program.Statements[0].(*ast.ExpressionStatement)
+		callExp := stmt.Expression.(*ast.CallExpression)
+
+		if len(callExp.Arguments) != len(tt.expectedArguments) {
+			t.Fatalf("callExp.Arguments does not contain %d arguments. got=%d", len(tt.expectedArguments), len(callExp.Arguments))
+		}
+
+		for i, ident := range tt.expectedArguments {
+			testLiteralExpression(t, callExp.Arguments[i], ident)
 		}
 	}
 }
