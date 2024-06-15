@@ -618,7 +618,7 @@ func TestIfElseExpression(t *testing.T) {
 }
 
 func TestFunctionLiteral(t *testing.T) {
-	input := "fn(x, y) { x + y;}"
+	input := "fn(x, y) { x + y; }"
 
 	l := lexer.NewLexer(input)
 	p := parser.NewParser(l)
