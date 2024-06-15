@@ -6,6 +6,19 @@
 
 A Monkey programming language interpreter from the book [Writing An Interpreter In Go](https://interpreterbook.com/) by Thorsten Ball.
 
+## Table of Contents
+
+- [Standard Types](#standard-types)
+    - [Integer](#integer)
+    - [Boolean](#boolean)
+- [Operators](#operators)
+    - [Basic Arithmetic Operators](#basic-arithemtic-operators)
+    - [Comparison Operators](#comparison-operators)
+    - [Operator Precedence](#operator-precedence)
+    - [Grouped Expressions](#grouped-expressions)
+- [Flow Control](#flow-control)
+    - [If Expressions](#if-expressions)
+
 ## Standard Types
 
 Monkey supports several basic data types.
