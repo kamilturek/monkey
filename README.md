@@ -66,3 +66,38 @@ You can use parentheses to influence the order of executing arithmetic operation
 ```
 let x = (2 / (5 + 5));
 ```
+
+## Flow Control
+
+### If Expressions
+
+Monkey supports `if` expressions for flow control. An `if` expression evaluates a condition and executes the corresponding block of code.
+
+The syntax for an `if` expression is as follows:
+
+```
+if (condition) { 
+    // block of code 
+} else { 
+    // optional else block 
+}
+```
+
+- The else block is optional.
+- Each block can contain multiple expressions or statements.
+- The value of the `if` expression is the value of the last expression in the executed block.
+
+#### Example
+
+```
+let x = 10;
+let y = 20;
+
+let max = if (x > y) {
+    x
+} else {
+    y
+};
+```
+
+In this example, max will be set to `20` because `y` is greater than `x`.
