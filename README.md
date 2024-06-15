@@ -18,6 +18,10 @@ A Monkey programming language interpreter from the book [Writing An Interpreter 
     - [Grouped Expressions](#grouped-expressions)
 - [Flow Control](#flow-control)
     - [If Expressions](#if-expressions)
+- [Functions](#functions)
+    - [Defining Functions](#defining-functions)
+    - [Anonymous Functions](#anonymous-functions)
+    - [First-Class Functions](#first-class-functions)
 
 ## Standard Types
 
@@ -114,3 +118,52 @@ let max = if (x > y) {
 ```
 
 In this example, max will be set to `20` because `y` is greater than `x`.
+
+## Functions
+
+Monkey supports functions, which can be defined, assigned to variables, called, and passed as arguments to other functions.
+
+### Defining Functions
+
+Functions can be defined using the `fn` keyword:
+
+```
+let add = fn(x, y) {
+    return x + y;
+};
+```
+
+The `return` statement is optional. If omitted, the last expression in the function block will be returned:
+
+```
+let add = fn(x, y) {
+    x + y;
+};
+```
+
+### Anonymous Functions
+
+Functions can be called immediately without being assigned to a variable:
+
+```
+let three = fn(x, y) { 
+    x + y; 
+}(1, 2);
+```
+
+### First-Class Functions
+
+Functions in Monkey are first-class objects, meaning they can be passed as arguments to other functions:
+
+```
+let sayHello = fn() {
+    print("hello");
+};
+
+let callTwice = fn(f) {
+    f();
+    f();
+};
+
+callTwice(sayHello);
+```
