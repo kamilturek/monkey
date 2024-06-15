@@ -96,7 +96,7 @@ if (condition) {
 }
 ```
 
-- The else block is optional.
+- The `else` block is optional.
 - Each block can contain multiple expressions or statements.
 - The value of the `if` expression is the value of the last expression in the executed block.
 
