@@ -1,5 +1,9 @@
 # Monkey
 
+<p align="center">
+    <img src="img/monkey.webp" width="400">
+</p>
+
 A Monkey programming language interpreter from the book [Writing An Interpreter In Go](https://interpreterbook.com/) by Thorsten Ball.
 
 ## Standard Types
