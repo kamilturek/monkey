@@ -29,6 +29,7 @@ func Start(in io.Reader, out io.Writer) {
 		errors := p.Errors()
 		if len(errors) != 0 {
 			printParserErrors(out, errors)
+
 			continue
 		}
 

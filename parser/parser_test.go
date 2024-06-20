@@ -175,7 +175,7 @@ func testParserErrors(t *testing.T, p *parser.Parser) {
 	t.FailNow()
 }
 
-func testProgramStatements(t *testing.T, program *ast.Program, expectedCount int) bool {
+func testProgramStatements(t *testing.T, program *ast.Program, expectedCount int) bool { //nolint:unparam
 	t.Helper()
 
 	if len(program.Statements) != expectedCount {
@@ -207,6 +207,10 @@ func TestLetStatements(t *testing.T) {
 		testParserErrors(t, p)
 
 		if !testProgramStatements(t, program, 1) {
+			return
+		}
+
+		if !testLetStatement(t, program.Statements[0], tt.expectedIdentifier) {
 			return
 		}
 
