@@ -30,9 +30,14 @@ func Eval(node ast.Node) object.Object {
 		right := Eval(node.Right)
 
 		return evalPrefixExpression(node.Operator, right)
-	}
+	case *ast.InfixExpression:
+		left := Eval(node.Left)
+		right := Eval(node.Right)
 
-	return nil
+		return evalInfixExpression(node.Operator, left, right)
+	default:
+		return nil
+	}
 }
 
 func evalStatements(stmts []ast.Statement) object.Object {
@@ -81,6 +86,53 @@ func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 
 	return &object.Integer{
 		Value: -integer.Value,
+	}
+}
+
+func evalInfixExpression(operator string, left object.Object, right object.Object) object.Object {
+	switch {
+	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
+		return evalIntegerInfixExpression(operator, left, right)
+	// Left and right must be booleans then.
+	case operator == "==":
+		return nativeBoolToBooleanObject(left == right)
+	case operator == "!=":
+		return nativeBoolToBooleanObject(left != right)
+	default:
+		return NULL
+	}
+}
+
+func evalIntegerInfixExpression(operator string, left object.Object, right object.Object) object.Object {
+	leftInteger, ok := left.(*object.Integer)
+	if !ok {
+		return NULL
+	}
+
+	rightInteger, ok := right.(*object.Integer)
+	if !ok {
+		return NULL
+	}
+
+	switch operator {
+	case "+":
+		return &object.Integer{Value: leftInteger.Value + rightInteger.Value}
+	case "-":
+		return &object.Integer{Value: leftInteger.Value - rightInteger.Value}
+	case "*":
+		return &object.Integer{Value: leftInteger.Value * rightInteger.Value}
+	case "/":
+		return &object.Integer{Value: leftInteger.Value / rightInteger.Value}
+	case "<":
+		return nativeBoolToBooleanObject(leftInteger.Value < rightInteger.Value)
+	case ">":
+		return nativeBoolToBooleanObject(leftInteger.Value > rightInteger.Value)
+	case "==":
+		return nativeBoolToBooleanObject(leftInteger.Value == rightInteger.Value)
+	case "!=":
+		return nativeBoolToBooleanObject(leftInteger.Value != rightInteger.Value)
+	default:
+		return NULL
 	}
 }
 
