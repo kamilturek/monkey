@@ -13,16 +13,13 @@ var (
 
 func Eval(node ast.Node) object.Object {
 	switch node := node.(type) {
-
 	// Statements
-
 	case *ast.Program:
 		return evalStatements(node.Statements)
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression)
 
 	// Expressions
-
 	case *ast.IntegerLiteral:
 		return &object.Integer{
 			Value: node.Value,
@@ -31,6 +28,7 @@ func Eval(node ast.Node) object.Object {
 		return nativeBoolToBooleanObject(node.Value)
 	case *ast.PrefixExpression:
 		right := Eval(node.Right)
+
 		return evalPrefixExpression(node.Operator, right)
 	}
 

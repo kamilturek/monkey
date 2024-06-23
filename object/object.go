@@ -1,7 +1,6 @@
 package object
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -29,7 +28,7 @@ func (i *Integer) Type() ObjectType {
 }
 
 func (i *Integer) Inspect() string {
-	return fmt.Sprintf("%d", i.Value)
+	return strconv.FormatInt(i.Value, 10)
 }
 
 // Boolean
@@ -48,8 +47,7 @@ func (b *Boolean) Inspect() string {
 
 // Null
 
-type Null struct {
-}
+type Null struct{}
 
 func (n *Null) Type() ObjectType {
 	return NULL_OBJ

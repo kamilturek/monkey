@@ -18,29 +18,37 @@ func testEval(input string) object.Object {
 }
 
 func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
+	t.Helper()
+
 	result, ok := obj.(*object.Integer)
 	if !ok {
 		t.Errorf("object is not Integer. got=%T (%+v)", obj, obj)
+
 		return false
 	}
 
 	if result.Value != expected {
 		t.Errorf("object has wrong value. got=%d, want=%d", expected, result.Value)
+
 		return false
 	}
 
 	return true
 }
 
-func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool {
+func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool { //nolint:unparam
+	t.Helper()
+
 	result, ok := obj.(*object.Boolean)
 	if !ok {
 		t.Errorf("object is not Boolean. got=%T (%+v)", obj, obj)
+
 		return false
 	}
 
 	if result.Value != expected {
 		t.Errorf("object has wrong value. got=%t, want=%t", expected, result.Value)
+
 		return false
 	}
 
