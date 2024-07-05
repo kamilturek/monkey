@@ -82,6 +82,18 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			Body:       node.Body,
 			Env:        env,
 		}
+	case *ast.CallExpression:
+		function := Eval(node.Function, env)
+		if isError(function) {
+			return function
+		}
+
+		args := evalExpressions(node.Arguments, env)
+		if len(args) == 1 && isError(args[0]) {
+			return args[0]
+		}
+
+		return applyFunction(function, args)
 	default:
 		return nil
 	}
@@ -195,6 +207,51 @@ func isTruthy(obj object.Object) bool {
 	default:
 		return false
 	}
+}
+
+func evalExpressions(exps []ast.Expression, env *object.Environment) []object.Object {
+	var results []object.Object
+
+	for _, exp := range exps {
+		evaluated := Eval(exp, env)
+		if isError(evaluated) {
+			return []object.Object{evaluated}
+		}
+
+		results = append(results, evaluated)
+	}
+
+	return results
+}
+
+func applyFunction(fn object.Object, args []object.Object) object.Object {
+	function, ok := fn.(*object.Function)
+	if !ok {
+		return newError("not a function: %s", fn.Type())
+	}
+
+	extendedEnv := extendFunctionEnv(function, args)
+	evaluated := Eval(function.Body, extendedEnv)
+
+	return unwrapReturnValue(evaluated)
+}
+
+func extendFunctionEnv(fn *object.Function, args []object.Object) *object.Environment {
+	env := object.NewEnclosedEnvironment(fn.Env)
+
+	for i, param := range fn.Parameters {
+		env.Set(param.Value, args[i])
+	}
+
+	return env
+}
+
+func unwrapReturnValue(obj object.Object) object.Object {
+	if returnValue, ok := obj.(*object.ReturnValue); ok {
+		return returnValue.Value
+	}
+
+	return obj
 }
 
 func evalIntegerInfixExpression(operator string, left object.Object, right object.Object) object.Object {
