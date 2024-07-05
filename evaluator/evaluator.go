@@ -76,6 +76,12 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 
 		return value
+	case *ast.FunctionLiteral:
+		return &object.Function{
+			Parameters: node.Parameters,
+			Body:       node.Body,
+			Env:        env,
+		}
 	default:
 		return nil
 	}
@@ -171,12 +177,11 @@ func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Obje
 		return condition
 	}
 
-	switch isTruthy(condition) {
-	case true:
+	if isTruthy(condition) {
 		return Eval(ie.Consequence, env)
-	case false:
+	} else if ie.Alternative != nil {
 		return Eval(ie.Alternative, env)
-	default:
+	} else {
 		return NULL
 	}
 }
