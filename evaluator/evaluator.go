@@ -171,11 +171,12 @@ func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Obje
 		return condition
 	}
 
-	if isTruthy(condition) {
+	switch isTruthy(condition) {
+	case true:
 		return Eval(ie.Consequence, env)
-	} else if ie.Alternative != nil {
+	case false:
 		return Eval(ie.Alternative, env)
-	} else {
+	default:
 		return NULL
 	}
 }
