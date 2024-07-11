@@ -189,7 +189,7 @@ func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Obje
 		return condition
 	}
 
-	if isTruthy(condition) {
+	if isTruthy(condition) { //nolint:gocritic
 		return Eval(ie.Consequence, env)
 	} else if ie.Alternative != nil {
 		return Eval(ie.Alternative, env)
@@ -210,7 +210,7 @@ func isTruthy(obj object.Object) bool {
 }
 
 func evalExpressions(exps []ast.Expression, env *object.Environment) []object.Object {
-	var results []object.Object
+	results := []object.Object{}
 
 	for _, exp := range exps {
 		evaluated := Eval(exp, env)

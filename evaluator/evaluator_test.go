@@ -282,6 +282,7 @@ func TestFunctionObject(t *testing.T) {
 	input := "fn(x) { x + 2; }"
 
 	evaluated := testEval(input)
+
 	fn, ok := evaluated.(*object.Function)
 	if !ok {
 		t.Fatalf("object is not Function. got=%T (%+v)", evaluated, evaluated)
