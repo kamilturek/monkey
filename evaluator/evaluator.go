@@ -105,7 +105,7 @@ func evalProgram(stmts []ast.Statement, env *object.Environment) object.Object {
 	for _, stmt := range stmts {
 		result = Eval(stmt, env)
 
-		// If `return` or error are encountered, stop executing the block.`
+		// If `return` or error are encountered, stop executing the block.
 		switch obj := result.(type) {
 		case *object.ReturnValue:
 			return obj.Value
@@ -123,7 +123,7 @@ func evalBlockStatement(stmts []ast.Statement, env *object.Environment) object.O
 	for _, stmt := range stmts {
 		result = Eval(stmt, env)
 
-		// If `return` or error are encountered, stop executing the block.`
+		// If `return` or error are encountered, stop executing the block.
 		if result.Type() == object.RETURN_VALUE_OBJ || result.Type() == object.ERROR_OBJ {
 			return result
 		}
