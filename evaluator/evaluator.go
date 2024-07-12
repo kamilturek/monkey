@@ -289,7 +289,7 @@ func evalIntegerInfixExpression(operator string, left object.Object, right objec
 	case "!=":
 		return nativeBoolToBooleanObject(leftInteger.Value != rightInteger.Value)
 	default:
-		return NULL
+		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
 }
 
@@ -304,11 +304,16 @@ func evalStringInfixExpression(operator string, left object.Object, right object
 		return NULL
 	}
 
-	if operator != "+" {
+	switch operator {
+	case "+":
+		return &object.String{Value: leftString.Value + rightString.Value}
+	case "==":
+		return nativeBoolToBooleanObject(leftString.Value == rightString.Value)
+	case "!=":
+		return nativeBoolToBooleanObject(leftString.Value != rightString.Value)
+	default:
 		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
-
-	return &object.String{Value: leftString.Value + rightString.Value}
 }
 
 func nativeBoolToBooleanObject(input bool) *object.Boolean {
