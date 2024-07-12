@@ -142,6 +142,7 @@ func TestEvalStringLiteral(t *testing.T) {
 	input := `"Hello World!"`
 
 	evaluated := testEval(input)
+
 	str, ok := evaluated.(*object.String)
 	if !ok {
 		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
@@ -153,9 +154,12 @@ func TestEvalStringLiteral(t *testing.T) {
 }
 
 func TestStringConcatenation(t *testing.T) {
+	t.Parallel()
+
 	input := `"Hello" + " " + "World!"`
 
 	evaluated := testEval(input)
+
 	str, ok := evaluated.(*object.String)
 	if !ok {
 		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
