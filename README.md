@@ -11,6 +11,7 @@ A Monkey programming language interpreter from the book [Writing An Interpreter 
 - [Standard Types](#standard-types)
   - [Integer](#integer)
   - [Boolean](#boolean)
+  - [String](#string)
 - [Operators](#operators)
   - [Basic Arithmetic Operators](#basic-arithemtic-operators)
   - [Comparison Operators](#comparison-operators)
