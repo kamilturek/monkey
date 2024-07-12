@@ -134,6 +134,11 @@ func (l *Lexer) NextToken() token.Token {
 			Type:    token.SEMICOLON,
 			Literal: string(l.ch),
 		}
+	case '"':
+		tok = token.Token{
+			Type:    token.STRING,
+			Literal: l.readString(),
+		}
 	case 0:
 		tok = token.Token{
 			Type:    token.EOF,
@@ -186,6 +191,19 @@ func (l *Lexer) readNumber() string {
 	}
 
 	return l.input[startPosition:l.position]
+}
+
+func (l *Lexer) readString() string {
+	position := l.position + 1
+
+	for {
+		l.readChar()
+		if l.ch == '"' || l.ch == 0 {
+			break
+		}
+	}
+
+	return l.input[position:l.position]
 }
 
 func (l *Lexer) skipWhitespace() {
