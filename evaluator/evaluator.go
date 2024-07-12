@@ -30,6 +30,10 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 	case *ast.BooleanLiteral:
 		return nativeBoolToBooleanObject(node.Value)
+	case *ast.StringLiteral:
+		return &object.String{
+			Value: node.Value,
+		}
 	case *ast.PrefixExpression:
 		right := Eval(node.Right, env)
 		if isError(right) {
@@ -173,6 +177,8 @@ func evalInfixExpression(operator string, left object.Object, right object.Objec
 		return newError("type mismatch: %s %s %s", left.Type(), operator, right.Type())
 	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
 		return evalIntegerInfixExpression(operator, left, right)
+	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
+		return evalStringInfixExpression(operator, left, right)
 	// Left and right must be booleans then.
 	case operator == "==":
 		return nativeBoolToBooleanObject(left == right)
@@ -283,7 +289,30 @@ func evalIntegerInfixExpression(operator string, left object.Object, right objec
 	case "!=":
 		return nativeBoolToBooleanObject(leftInteger.Value != rightInteger.Value)
 	default:
+		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+	}
+}
+
+func evalStringInfixExpression(operator string, left object.Object, right object.Object) object.Object {
+	leftString, ok := left.(*object.String)
+	if !ok {
 		return NULL
+	}
+
+	rightString, ok := right.(*object.String)
+	if !ok {
+		return NULL
+	}
+
+	switch operator {
+	case "+":
+		return &object.String{Value: leftString.Value + rightString.Value}
+	case "==":
+		return nativeBoolToBooleanObject(leftString.Value == rightString.Value)
+	case "!=":
+		return nativeBoolToBooleanObject(leftString.Value != rightString.Value)
+	default:
+		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
 }
 

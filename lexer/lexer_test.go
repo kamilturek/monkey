@@ -32,6 +32,9 @@ func TestNextToken(t *testing.T) {
 	10 != 9;
 
 	return5;
+
+	"foobar";
+	"foo bar";
 	`
 
 	type expectedToken struct {
@@ -121,6 +124,10 @@ func TestNextToken(t *testing.T) {
 		INT9,
 		SEMICOLON,
 		{token.IDENT, "return5"},
+		SEMICOLON,
+		{token.STRING, "foobar"},
+		SEMICOLON,
+		{token.STRING, "foo bar"},
 		SEMICOLON,
 		{token.EOF, ""},
 	}
