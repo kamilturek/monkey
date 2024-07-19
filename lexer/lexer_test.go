@@ -35,6 +35,7 @@ func TestNextToken(t *testing.T) {
 
 	"foobar";
 	"foo bar";
+	[1, 2];
 	`
 
 	type expectedToken struct {
@@ -48,6 +49,11 @@ func TestNextToken(t *testing.T) {
 	INT9 := expectedToken{token.INT, "9"}
 	INT10 := expectedToken{token.INT, "10"}
 	SEMICOLON := expectedToken{token.SEMICOLON, ";"}
+	COMMA := expectedToken{token.COMMA, ","}
+	LBRACE := expectedToken{token.LBRACE, "{"}
+	RBRACE := expectedToken{token.RBRACE, "}"}
+	LBRACKET := expectedToken{token.LBRACKET, "["}
+	RBRACKET := expectedToken{token.RBRACKET, "]"}
 
 	tests := []expectedToken{
 		LET,
@@ -69,12 +75,12 @@ func TestNextToken(t *testing.T) {
 		{token.COMMA, ","},
 		{token.IDENT, "y"},
 		{token.RPAREN, ")"},
-		{token.LBRACE, "{"},
+		LBRACE,
 		{token.IDENT, "x"},
 		{token.PLUS, "+"},
 		{token.IDENT, "y"},
 		SEMICOLON,
-		{token.RBRACE, "}"},
+		RBRACE,
 		SEMICOLON,
 		{token.LET, "let"},
 		{token.IDENT, "result"},
@@ -104,17 +110,17 @@ func TestNextToken(t *testing.T) {
 		{token.LT, "<"},
 		INT10,
 		{token.RPAREN, ")"},
-		{token.LBRACE, "{"},
+		LBRACE,
 		{token.RETURN, "return"},
 		{token.TRUE, "true"},
 		SEMICOLON,
-		{token.RBRACE, "}"},
+		RBRACE,
 		{token.ELSE, "else"},
-		{token.LBRACE, "{"},
+		LBRACE,
 		{token.RETURN, "return"},
 		{token.FALSE, "false"},
 		SEMICOLON,
-		{token.RBRACE, "}"},
+		RBRACE,
 		INT10,
 		{token.EQ, "=="},
 		INT10,
@@ -128,6 +134,12 @@ func TestNextToken(t *testing.T) {
 		{token.STRING, "foobar"},
 		SEMICOLON,
 		{token.STRING, "foo bar"},
+		SEMICOLON,
+		LBRACKET,
+		{token.INT, "1"},
+		COMMA,
+		{token.INT, "2"},
+		RBRACKET,
 		SEMICOLON,
 		{token.EOF, ""},
 	}
