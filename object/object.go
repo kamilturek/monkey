@@ -2,6 +2,7 @@ package object
 
 import (
 	"bytes"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -19,6 +20,7 @@ const (
 	ERROR_OBJ        = "ERROR"
 	FUNCTION_OBJ     = "FUNCTION_OBJ"
 	BUILTIN_OBJ      = "BUILTIN"
+	ARRAY_OBJ        = "ARRAY"
 )
 
 type Object interface {
@@ -151,4 +153,22 @@ func (b *Builtin) Type() ObjectType {
 
 func (b *Builtin) Inspect() string {
 	return "builtin function"
+}
+
+// Array
+
+type Array struct {
+	Elements []Object
+}
+
+func (a *Array) Type() ObjectType { return ARRAY_OBJ }
+
+func (a *Array) Inspect() string {
+	elements := []string{}
+
+	for _, el := range a.Elements {
+		elements = append(elements, el.Inspect())
+	}
+
+	return fmt.Sprintf("[%s]", strings.Join(elements, ", "))
 }
