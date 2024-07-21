@@ -1,6 +1,10 @@
 package evaluator
 
-import "github.com/kamilturek/monkey/object"
+import (
+	"fmt"
+
+	"github.com/kamilturek/monkey/object"
+)
 
 var builtins = map[string]*object.Builtin{
 	"len": {
@@ -104,6 +108,15 @@ var builtins = map[string]*object.Builtin{
 			default:
 				return NewError("argument to `push` not supported, got=%s", args[0].Type())
 			}
+		},
+	},
+	"puts": {
+		Fn: func(args ...object.Object) object.Object {
+			for _, arg := range args {
+				fmt.Println(arg.Inspect())
+			}
+
+			return NULL
 		},
 	},
 }
