@@ -68,6 +68,41 @@ func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool { //
 	return true
 }
 
+func testStringObject(t *testing.T, obj object.Object, expected string) bool {
+	t.Helper()
+
+	result, ok := obj.(*object.String)
+	if !ok {
+		t.Errorf("object is not String. got=%T (%+v)", obj, obj)
+
+		return false
+	}
+
+	if result.Value != expected {
+		t.Errorf("object has wrong value. got=%s, want=%s", result.Value, expected)
+
+		return false
+	}
+
+	return true
+}
+
+func testErrorObject(t *testing.T, obj object.Object, expected *object.Error) bool {
+	result, ok := obj.(*object.Error)
+	if !ok {
+		t.Errorf("object is not Error. got=%T (%+v)", obj, obj)
+
+		return false
+	}
+	if result.Message != expected.Message {
+		t.Errorf("wrong error message. expected=%q, got=%q", expected, result.Message)
+
+		return false
+	}
+
+	return true
+}
+
 func TestEvalIntegerExpression(t *testing.T) {
 	t.Parallel()
 
@@ -471,8 +506,9 @@ func TestLen(t *testing.T) {
 		{`len("")`, 0},
 		{`len("four")`, 4},
 		{`len("hello world")`, 11},
-		{`len(1)`, "argument to `len` not supported, got=INTEGER"},
-		{`len("one", "two")`, "wrong number of arguments. got=2, want=1"},
+		{`len([1, 2, 3])`, 3},
+		{`len(1)`, evaluator.NewError("argument to `len` not supported, got=INTEGER")},
+		{`len("one", "two")`, evaluator.NewError("wrong number of arguments. got=2, want=1")},
 	}
 
 	for _, tt := range tests {
@@ -481,15 +517,59 @@ func TestLen(t *testing.T) {
 		switch expected := tt.expected.(type) {
 		case int:
 			testIntegerObject(t, evaluated, int64(expected))
-		case string:
-			errObj, ok := evaluated.(*object.Error)
+		case *object.Error:
+			testErrorObject(t, evaluated, expected)
+		}
+	}
+}
+
+func TestArrayFunctions(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{`first([1, 2, 3])`, 1},
+		{`first([])`, evaluator.NULL},
+		{`first(1)`, evaluator.NewError("argument to `first` not supported, got=INTEGER")},
+		{`first("one", "two")`, evaluator.NewError("wrong number of arguments. got=2, want=1")},
+		{`last([1, 2, 3])`, 3},
+		{`last([])`, evaluator.NULL},
+		{`last(1)`, evaluator.NewError("argument to `last` not supported, got=INTEGER")},
+		{`last("one", "two")`, evaluator.NewError("wrong number of arguments. got=2, want=1")},
+		{`rest([1, 2, 3])`, []int{2, 3}},
+		{`rest([])`, evaluator.NULL},
+		{`last(1)`, evaluator.NewError("argument to `last` not supported, got=INTEGER")},
+		{`rest(1)`, evaluator.NewError("argument to `rest` not supported, got=INTEGER")},
+		{`rest("one", "two")`, evaluator.NewError("wrong number of arguments. got=2, want=1")},
+		{`push([1, 2, 3], 4)`, []int{1, 2, 3, 4}},
+		{`push([1, 2, 3])`, evaluator.NewError("wrong number of arguments. got=1, want=2")},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+
+		switch expected := tt.expected.(type) {
+		case int:
+			testIntegerObject(t, evaluated, int64(expected))
+		case []int:
+			array, ok := evaluated.(*object.Array)
 			if !ok {
-				t.Errorf("object is not Error. got=%T (%+v)", evaluated, evaluated)
-				continue
+				t.Fatalf("object not Array. got=%T (%+v)", evaluated, evaluated)
 			}
-			if errObj.Message != expected {
-				t.Errorf("wrong error message. expected=%q, got=%q", expected, errObj.Message)
+
+			for i, el := range array.Elements {
+				if !testIntegerObject(t, el, int64(expected[i])) {
+					break
+				}
 			}
+		case *object.Error:
+			testErrorObject(t, evaluated, expected)
+		case *object.Null:
+			testNullObject(t, evaluated)
+		default:
+			t.Fatalf("unknown expected type. got=%T (%+v)", tt.expected, tt.expected)
 		}
 	}
 }

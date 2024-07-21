@@ -82,7 +82,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return builtin
 		}
 
-		return newError("identifier not found: " + node.Value)
+		return NewError("identifier not found: " + node.Value)
 	case *ast.FunctionLiteral:
 		return &object.Function{
 			Parameters: node.Parameters,
@@ -187,7 +187,7 @@ func evalBangOperatorExpression(right object.Object) object.Object {
 func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 	integer, ok := right.(*object.Integer)
 	if !ok {
-		return newError("unknown operator: -%s", right.Type())
+		return NewError("unknown operator: -%s", right.Type())
 	}
 
 	return &object.Integer{
@@ -198,7 +198,7 @@ func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 func evalInfixExpression(operator string, left object.Object, right object.Object) object.Object {
 	switch {
 	case left.Type() != right.Type():
-		return newError("type mismatch: %s %s %s", left.Type(), operator, right.Type())
+		return NewError("type mismatch: %s %s %s", left.Type(), operator, right.Type())
 	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
 		return evalIntegerInfixExpression(operator, left, right)
 	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
@@ -209,7 +209,7 @@ func evalInfixExpression(operator string, left object.Object, right object.Objec
 	case operator == "!=":
 		return nativeBoolToBooleanObject(left != right)
 	default:
-		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+		return NewError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
 }
 
@@ -263,7 +263,7 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 	case *object.Builtin:
 		return fn.Fn(args...)
 	default:
-		return newError("not a function: %s", fn.Type())
+		return NewError("not a function: %s", fn.Type())
 	}
 }
 
@@ -314,7 +314,7 @@ func evalIntegerInfixExpression(operator string, left object.Object, right objec
 	case "!=":
 		return nativeBoolToBooleanObject(leftInteger.Value != rightInteger.Value)
 	default:
-		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+		return NewError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
 }
 
@@ -337,7 +337,7 @@ func evalStringInfixExpression(operator string, left object.Object, right object
 	case "!=":
 		return nativeBoolToBooleanObject(leftString.Value != rightString.Value)
 	default:
-		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+		return NewError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
 }
 
@@ -346,7 +346,7 @@ func evalIndexExpression(left object.Object, index object.Object) object.Object 
 	case left.Type() == object.ARRAY_OBJ && index.Type() == object.INTEGER_OBJ:
 		return evalArrayIndexExpression(left, index)
 	default:
-		return newError("index operator not supported: %s", left.Type())
+		return NewError("index operator not supported: %s", left.Type())
 	}
 }
 
@@ -378,7 +378,7 @@ func nativeBoolToBooleanObject(input bool) *object.Boolean {
 	return FALSE
 }
 
-func newError(format string, a ...interface{}) *object.Error {
+func NewError(format string, a ...interface{}) *object.Error {
 	return &object.Error{
 		Message: fmt.Sprintf(format, a...),
 	}
