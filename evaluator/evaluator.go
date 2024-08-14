@@ -309,6 +309,10 @@ func evalIntegerInfixExpression(operator string, left object.Object, right objec
 		return nativeBoolToBooleanObject(leftInteger.Value < rightInteger.Value)
 	case ">":
 		return nativeBoolToBooleanObject(leftInteger.Value > rightInteger.Value)
+	case "<=":
+		return nativeBoolToBooleanObject(leftInteger.Value <= rightInteger.Value)
+	case ">=":
+		return nativeBoolToBooleanObject(leftInteger.Value >= rightInteger.Value)
 	case "==":
 		return nativeBoolToBooleanObject(leftInteger.Value == rightInteger.Value)
 	case "!=":

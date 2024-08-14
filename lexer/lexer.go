@@ -95,14 +95,32 @@ func (l *Lexer) NextToken() token.Token {
 			Literal: string(l.ch),
 		}
 	case '<':
-		tok = token.Token{
-			Type:    token.LT,
-			Literal: string(l.ch),
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			tok = token.Token{
+				Type:    token.LTE,
+				Literal: string(ch) + string(l.ch),
+			}
+		} else {
+			tok = token.Token{
+				Type:    token.LT,
+				Literal: string(l.ch),
+			}
 		}
 	case '>':
-		tok = token.Token{
-			Type:    token.GT,
-			Literal: string(l.ch),
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			tok = token.Token{
+				Type:    token.GTE,
+				Literal: string(ch) + string(l.ch),
+			}
+		} else {
+			tok = token.Token{
+				Type:    token.GT,
+				Literal: string(l.ch),
+			}
 		}
 	case '(':
 		tok = token.Token{

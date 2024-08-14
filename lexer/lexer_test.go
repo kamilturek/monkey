@@ -30,6 +30,8 @@ func TestNextToken(t *testing.T) {
 
 	10 == 10;
 	10 != 9;
+	1 <= 2;
+	2 >= 1;
 
 	return5;
 
@@ -128,6 +130,14 @@ func TestNextToken(t *testing.T) {
 		INT10,
 		{token.NOT_EQ, "!="},
 		INT9,
+		SEMICOLON,
+		{token.INT, "1"},
+		{token.LTE, "<="},
+		{token.INT, "2"},
+		SEMICOLON,
+		{token.INT, "2"},
+		{token.GTE, ">="},
+		{token.INT, "1"},
 		SEMICOLON,
 		{token.IDENT, "return5"},
 		SEMICOLON,
