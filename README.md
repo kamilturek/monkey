@@ -1,20 +1,21 @@
 # Monkey
 
 <p align="center">
-    <img src="img/monkey.webp" width="400">
+    <img src="img/monkey.webp" width="400" alt="logo">
 </p>
 
-A Monkey programming language interpreter from the book [Writing An Interpreter In Go](https://interpreterbook.com/) by Thorsten Ball.
+A Monkey programming language interpreter from the book
+[Writing An Interpreter In Go](https://interpreterbook.com/) by Thorsten Ball.
 
 ## Table of Contents
 
+- [Usage](#usage)
 - [Standard Types](#standard-types)
   - [Integer](#integer)
   - [Boolean](#boolean)
   - [String](#string)
-- [Operators](#operators)
-  - [Basic Arithmetic Operators](#basic-arithemtic-operators)
-  - [Comparison Operators](#comparison-operators)
+  - [Array](#array)
+- [Operator Precedence](#operator-precedence)
   - [Operator Precedence](#operator-precedence)
   - [Grouped Expressions](#grouped-expressions)
 - [Flow Control](#flow-control)
@@ -23,6 +24,18 @@ A Monkey programming language interpreter from the book [Writing An Interpreter 
   - [Defining Functions](#defining-functions)
   - [Anonymous Functions](#anonymous-functions)
   - [First-Class Functions](#first-class-functions)
+
+## Usage
+
+Monkey can be used in the REPL mode (Read-Eval-Print Loop).
+Simply run the `monkey` command without any arguments:
+
+```sh
+$ monkey
+Hello username! This is the Monkey programming language!
+Feel free to type in commands
+>> 
+```
 
 ## Standard Types
 
@@ -34,11 +47,40 @@ Monkey supports several basic data types.
 let x = 12345;
 ```
 
+You can use the following operators to perform arithmetic operations on integers
+in Monkey: `+`, `-`, `*`, and `/`.
+
+```javascript
+let x = 1 + 2 - 3 * 4;
+```
+
+To compare integers, comparison operators such as `>`, `>=`, `<`, `<=`, `==`,
+and `!=` can be used.
+
+```javascript
+let a = 5 > 5;   // false
+let b = 5 >= 5;  // true
+let c = 5 < 5;   // false
+let d = 5 <= 5;  // true
+let e = 5 == 5;  // true
+let f = 5 != 5;  // false
+```
+
 ### Boolean
 
 ```javascript
 let x = true;
 let y = false;
+```
+
+Booleans can be compared using the `==` and `!=` operators.
+
+```javascript
+let x = true;
+
+if (x == true) {
+    puts("x is true");
+}
 ```
 
 ### String
@@ -47,52 +89,43 @@ let y = false;
 let x = "Hello World";
 ```
 
-## Operators
+Strings, similarly to other types, can be compared using commparison operators
+(`==` and `!=`).
 
-Monkey includes a variety of operators for performing arithmetic and comparisons.
-
-### Basic Arithemtic Operators
-
-You can use the following arithmetic operators: `+`, `-`, `*`, and `/`.
+The `+` operator concatenates two or more strings.
 
 ```javascript
-let x = 1 + 2 - 3 * 4;
+let x = "Hello" + " " + "World!"; // "Hello World!"
 ```
 
-Strings can be concatenated using the `+` operator. `==` and `!=` can be used to
-compare two strings.
+### Array
+
+Arrays can be used to store a sequence of objects that can be accessed
+by an index.
 
 ```javascript
-let x = "Hello" + " " + "World";
-
-if (x == "Hello World") {
-    // ...
-}
+let names = ["John", "Bob", "Alice"];
+names[0]; // "John"
 ```
 
-### Comparison Operators
-
-Monkey supports comparison operators such as `>`, `<`, `==`, and `!=`.
+Different object types can be mixed within a single array.
 
 ```javascript
-let x = 5 > 5;
-let y = 5 < 5;
-let z = 5 == 5;
-let v = 5 != 5;
+let myArray = ["John", 1, fn(x) { return x; }, false];
 ```
 
-### Operator Precedence
+## Operator Precedence
 
 The following table shows the operator precedence in Monkey, from lowest to highest:
 
-| Precedence Level | Operators       | Description                |
-|------------------|-----------------|----------------------------|
-| 6 (Highest)      | Function calls  | Function calls             |
-| 5                | Prefix `-`, `!` | Unary operations           |
-| 4                | `*`, `/`        | Multiplication and Division|
-| 3                | `+`, `-`        | Addition and Subtraction   |
-| 2                | `<`, `>`        | Comparison                 |
-| 1 (Lowest)       | `==`, `!=`      | Equality                   |
+| Precedence Level | Operators            | Description                |
+|------------------|----------------------|----------------------------|
+| 6 (Highest)      | Function calls       | Function calls             |
+| 5                | Prefix `-`, `!`      | Unary operations           |
+| 4                | `*`, `/`             | Multiplication and Division|
+| 3                | `+`, `-`             | Addition and Subtraction   |
+| 2                | `<`, `>`, `<=`, `>=` | Comparison                 |
+| 1 (Lowest)       | `==`, `!=`           | Equality                   |
 
 ### Grouped Expressions
 
