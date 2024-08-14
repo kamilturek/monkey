@@ -85,7 +85,11 @@ func (interp *interpreter) executeFile() {
 		return
 	}
 
-	evaluator.Eval(program, env)
+	evaluated := evaluator.Eval(program, env)
+
+	if err, ok := evaluated.(*object.Error); ok {
+		fmt.Fprintf(interp.output, "%s\n", err.Inspect())
+	}
 }
 
 func (interp *interpreter) startRepl() {
